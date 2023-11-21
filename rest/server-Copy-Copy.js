@@ -1,0 +1,1 @@
+Halo! Ini adalah server Node.js sederhana, saya menghubungkan menggunakan Esp32 secara langsung dan Menggunakan aplikasi Arduino Ide, karena menurut saya melalui Wokwi sangat sulit.
