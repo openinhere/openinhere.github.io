@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Buka Bersama</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    background:radial-gradient(circle at top,#1c2b3a,#0f2027 60%);
+    color:white;
+    overflow-x:hidden;
+}
+
+canvas{
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    z-index:-1;
+}
+
+.fade-out{ animation:fadeOut 1s forwards; }
+.fade-in{ animation:fadeIn 1.5s ease forwards; }
+
+@keyframes fadeOut{
+    from{opacity:1; transform:scale(1);}
+    to{opacity:0; transform:scale(0.95);}
+}
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(40px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+.section{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.card{
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(15px);
+    padding:45px;
+    border-radius:25px;
+    max-width:600px;
+    width:100%;
+    box-shadow:0 0 30px rgba(255,211,105,0.2);
+    border:1px solid rgba(255,211,105,0.3);
+}
+
+h1{
+    font-family:'Playfair Display',serif;
+    font-size:32px;
+    background:linear-gradient(45deg,#FFD369,#fff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:20px;
+}
+
+button{
+    margin-top:12px;
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(45deg,#FFD369,#f5c518);
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    width:100%;
+}
+
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 20px #FFD369;
+}
+
+.hidden{ display:none; }
+
+.mosque{
+    font-size:60px;
+    margin-bottom:20px;
+    animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+    from{ text-shadow:0 0 10px #FFD369; }
+    to{ text-shadow:0 0 30px #FFD369; }
+}
+
+.moon{
+    position:absolute;
+    top:40px;
+    right:40px;
+    font-size:50px;
+    opacity:0.15;
+    animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-15px);}
+    100%{transform:translateY(0);}
+}
+
+.countdown{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.count-box{
+    background:rgba(255,255,255,0.1);
+    padding:15px;
+    border-radius:10px;
+    min-width:70px;
+}
+
+a{text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="moon">🌙</div>
+<canvas id="particles"></canvas>
+
+<!-- COVER -->
+<section class="section" id="cover">
+    <div class="card">
+        <div class="mosque">🕌</div>
+        <h1>Undangan Buka Bersama</h1>
+        <p>Kepada Yth:</p>
+        <h2 id="guestName"></h2>
+        <button onclick="openInvite()">Buka Undangan</button>
+    </div>
+</section>
+
+<!-- CONTENT -->
+<section class="section hidden" id="content">
+    <div class="card fade-in">
+        <h1>✨ Buka Bersama Ramadan 2026 ✨</h1>
+
+        <p><strong>Hari:</strong> Jumat</p>
+        <p><strong>Tanggal:</strong> 6 Maret 2026</p>
+        <p><strong>Waktu:</strong> 17.00 WIB</p>
+        <p><strong>Tempat:</strong> Millenials Space Cafe & Resto</p>
+
+        <div class="countdown">
+            <div class="count-box"><h2 id="days">0</h2><small>Hari</small></div>
+            <div class="count-box"><h2 id="hours">0</h2><small>Jam</small></div>
+            <div class="count-box"><h2 id="minutes">0</h2><small>Menit</small></div>
+            <div class="count-box"><h2 id="seconds">0</h2><small>Detik</small></div>
+        </div>
+
+        <a href="https://heyzine.com/flip-book/d0744f0ef3.html#page/8" target="_blank" onclick="stopMusic()">
+            <button>🍗 Lihat Menu</button>
+        </a>
+
+        <a href="https://docs.google.com/spreadsheets/d/1VbqTFIGsduaGNPTnKW8Em4vENQsZrbrRWcGDRyfi-Zc/edit?usp=sharing" target="_blank" onclick="stopMusic()">
+            <button>🥗 List Order</button>
+        </a>
+
+        <a href="https://maps.app.goo.gl/XC6EgYGDQkUx3WL18" target="_blank" onclick="stopMusic()">
+            <button>📍 Lihat Lokasi</button>
+        </a>
+
+        <button onclick="shareWhatsApp()">📤 Share WhatsApp</button>
+        <button onclick="toggleMusic()" id="musicBtn">🔊 Musik On</button>
+
+        <p style="margin-top:20px;">Kami tunggu kehadiran Anda 🙏</p>
+    </div>
+</section>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const guest = urlParams.get('to');
+document.getElementById("guestName").innerText = guest ? guest : "Staff Cahaya Poles Mulia";
+
+function openInvite(){
+    const cover = document.getElementById("cover");
+    const content = document.getElementById("content");
+
+    cover.classList.add("fade-out");
+
+    setTimeout(()=>{
+        cover.classList.add("hidden");
+        content.classList.remove("hidden");
+        const music = document.getElementById("music");
+        music.volume = 1;
+        music.play();
+    },1000);
+}
+
+/* PREMIUM FADE OUT */
+function fadeOutMusic(){
+    const music = document.getElementById("music");
+    const btn = document.getElementById("musicBtn");
+
+    let volume = music.volume;
+    const fade = setInterval(()=>{
+        if(volume > 0.05){
+            volume -= 0.05;
+            music.volume = volume;
+        } else {
+            clearInterval(fade);
+            music.pause();
+            music.currentTime = 0;
+            music.volume = 1;
+            btn.innerHTML = "🔇 Musik Off";
+        }
+    },50);
+}
+
+function stopMusic(){
+    fadeOutMusic();
+}
+
+function toggleMusic(){
+    const music = document.getElementById("music");
+    const btn = document.getElementById("musicBtn");
+
+    if(music.paused){
+        music.volume = 1;
+        music.play();
+        btn.innerHTML = "🔊 Musik On";
+    } else {
+        fadeOutMusic();
+    }
+}
+
+function shareWhatsApp(){
+    const nama = guest ? guest : "Staff Cahaya Poles Mulia";
+    const url = window.location.href;
+    const text = `Assalamu’alaikum ${nama}, Anda diundang ke acara Buka Bersama 🌙\n${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
+}
+
+const eventDate = new Date("March 6, 2026 17:00:00").getTime();
+setInterval(function(){
+    const now = new Date().getTime();
+    const distance = eventDate - now;
+    if(distance < 0) return;
+
+    days.innerText = Math.floor(distance/(1000*60*60*24));
+    hours.innerText = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    minutes.innerText = Math.floor((distance%(1000*60*60))/(1000*60));
+    seconds.innerText = Math.floor((distance%(1000*60))/1000);
+},1000);
+
+/* PARTICLE */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeCanvas();window.addEventListener("resize",resizeCanvas);
+
+let particlesArray=[];
+class Particle{
+constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*3+1;this.speedY=Math.random()*1+0.5;this.opacity=Math.random();}
+update(){this.y+=this.speedY;if(this.y>canvas.height){this.y=0;this.x=Math.random()*canvas.width;}}
+draw(){ctx.fillStyle=`rgba(255,211,105,${this.opacity})`;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();}
+}
+for(let i=0;i<120;i++){particlesArray.push(new Particle());}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particlesArray.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);}
+animate();
+</script>
+
+</body>
+</html>
